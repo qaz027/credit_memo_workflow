@@ -2,7 +2,6 @@
 Diagramming credit IC memo workflow
 
 ```mermaid
-
 ---
 title: "Credit — L0 Overview"
 ---
