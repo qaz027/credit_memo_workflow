@@ -1,2 +1,51 @@
 # credit_memo_workflow
 Diagramming credit IC memo workflow
+
+```mermaid
+---
+title: "Credit — L0 Overview"
+---
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef gate fill:#F9A825,stroke:#F57F17,color:#1a202c,font-weight:bold,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef handoff fill:#4527A0,stroke:#311B92,color:#fff,rx:4,ry:4
+    classDef futureUpgrade fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4,stroke-width:3px,stroke-dasharray:5 5
+
+    ENTRY(["Workflow Start"]):::endpoint
+
+    P1["Phase 1: Opportunity Screening & M… | 8 steps (2F/3P/3N)"]:::llmPartial
+    ENTRY --> P1
+    P2["Phase 2: Issuer & Industry Analysis | 4 steps (1F/3P/0N)"]:::llmPartial
+    P1 --> P2
+    P3["Phase 3: Credit Financial Analysis | 6 steps (0F/6P/0N)"]:::llmPartial
+    P2 --> P3
+    P4["Phase 4: Credit Modeling & Scenari… | 6 steps (0F/6P/0N)"]:::llmPartial
+    P3 --> P4
+    P5["Phase 5: Relative Value & Total Re… | 4 steps (0F/3P/1N)"]:::llmPartial
+    P4 --> P5
+    P6["Phase 6: Legal & Structural Analys… | 3 steps (0F/3P/0N)"]:::llmPartial
+    P5 --> P6
+    P7["Phase 7: Model & Data Validation | 5 steps (0F/0P/5N)"]:::llmNone
+    P6 --> P7
+    P8["Phase 8: Memo Drafting | 11 steps (9F/1P/1N)"]:::llmFull
+    P7 --> P8
+    P9["Phase 9: Quality Assurance & Review | 5 steps (2F/1P/2N)"]:::llmPartial
+    P8 --> P9
+    P10["Phase 10: IC Preparation & Execution | 4 steps (1F/0P/3N)"]:::llmNone
+    P9 --> P10
+    P11["Phase 11: Post-Mortem Protocol | 3 steps (1F/2P/0N)"]:::llmPartial
+    P10 --> P11
+
+    P11 --> DONE(["Workflow Complete"]):::endpoint
+
+    subgraph Legend
+        direction LR
+        LEG_F["Majority Full"]:::llmFull
+        LEG_P["Majority Partial"]:::llmPartial
+        LEG_N["Majority None"]:::llmNone
+    end
+```
