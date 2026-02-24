@@ -1,0 +1,44 @@
+---
+title: "Credit — L1 Phase 4: Credit Modeling & Scenarios"
+---
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef gate fill:#F9A825,stroke:#F57F17,color:#1a202c,font-weight:bold,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef handoff fill:#4527A0,stroke:#311B92,color:#fff,rx:4,ry:4
+    classDef futureUpgrade fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4,stroke-width:3px,stroke-dasharray:5 5
+
+    ENTER(["From Phase 3: Credit Financial Analysis"]):::endpoint
+
+    S4_1["4.1 Analyst: Build credit projection model with …"]:::llmFull
+    ENTER --> S4_1
+
+    S4_2["4.2 Analyst: Model debt service waterfall by sen…"]:::llmFull
+    S4_1 --> S4_2
+
+    S4_3["4.3 Analyst: Project covenant compliance under a…"]:::llmFull
+    S4_2 --> S4_3
+
+    S4_4["4.4 Analyst: Model refinancing scenarios and mat…"]:::llmPartial
+    S4_3 --> S4_4
+
+    S4_5["4.5 Analyst: Build recovery analysis with trough…"]:::llmFull
+    S4_4 --> S4_5
+
+    S4_6["4.6 Analyst: Calculate expected return across pr…"]:::llmFull
+    S4_5 --> S4_6
+
+    EXIT(["To Phase 5: Relative Value & Total Retu…"]):::endpoint
+    S4_6 --> EXIT
+
+    %% ── LEGEND ──
+    subgraph Legend
+        direction LR
+        LEG_F["Full LLM"]:::llmFull
+        LEG_P["Partial / Paywall"]:::llmPartial
+        LEG_N["Human Only"]:::llmNone
+        LEG_U["Future: Full via free API"]:::futureUpgrade
+    end

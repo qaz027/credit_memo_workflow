@@ -1,0 +1,44 @@
+---
+title: "Credit — L1 Phase 3: Credit Financial Analysis"
+---
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef gate fill:#F9A825,stroke:#F57F17,color:#1a202c,font-weight:bold,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef handoff fill:#4527A0,stroke:#311B92,color:#fff,rx:4,ry:4
+    classDef futureUpgrade fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4,stroke-width:3px,stroke-dasharray:5 5
+
+    ENTER(["From Phase 2: Issuer & Industry Analysis"]):::endpoint
+
+    S3_1["3.1 Analyst: Standardize financial statements in…"]:::llmFull
+    ENTER --> S3_1
+
+    S3_2["3.2 Analyst: Build EBITDA-to-cash bridge and ass…"]:::llmFull
+    S3_1 --> S3_2
+
+    S3_3["3.3 Analyst: Compute and trend all credit ratios"]:::llmFull
+    S3_2 --> S3_3
+
+    S3_4["3.4 Analyst: Map complete capital structure by s…"]:::llmFull
+    S3_3 --> S3_4
+
+    S3_5["3.5 Analyst: Model liquidity runway under stress…"]:::llmPartial
+    S3_4 --> S3_5
+
+    S3_6["3.6 Analyst: Analyze covenant headroom using leg…"]:::llmFull
+    S3_5 --> S3_6
+
+    EXIT(["To Phase 4: Credit Modeling & Scenarios"]):::endpoint
+    S3_6 --> EXIT
+
+    %% ── LEGEND ──
+    subgraph Legend
+        direction LR
+        LEG_F["Full LLM"]:::llmFull
+        LEG_P["Partial / Paywall"]:::llmPartial
+        LEG_N["Human Only"]:::llmNone
+        LEG_U["Future: Full via free API"]:::futureUpgrade
+    end

@@ -1,0 +1,46 @@
+---
+title: "Credit — L1 Phase 10: IC Preparation & Execution"
+---
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef gate fill:#F9A825,stroke:#F57F17,color:#1a202c,font-weight:bold,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef handoff fill:#4527A0,stroke:#311B92,color:#fff,rx:4,ry:4
+    classDef futureUpgrade fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4,stroke-width:3px,stroke-dasharray:5 5
+
+    ENTER(["From Phase 9: Quality Assurance & Review"]):::endpoint
+
+    S10_1["10.1 Analyst: Distribute pre-read package to IC m…"]:::llmNone
+    ENTER --> S10_1
+    HO_S10_1["HANDOFF -> IC Members | Artifact: Pre-read package"]:::handoff
+    S10_1 --> HO_S10_1
+
+    S10_2["10.2 Analyst: Prepare Q&A for anticipated credit …"]:::llmFull
+    HO_S10_1 --> S10_2
+
+    S10_3["10.3 Analyst: Present credit case to IC"]:::llmNone
+    S10_2 --> S10_3
+    D_S10_3{"IC approves, requests revisions, or…"}:::decision
+    S10_3 --> D_S10_3
+    D_S10_3 -->|Revisions -> Return to releva…| VARIANT_S10_3(["Variant"]):::endpoint
+    D_S10_3 -->|Continue| CONT_S10_3[ ]
+
+    S10_4["10.4 PM: Document IC decision and execute tr…"]:::llmNone
+    CONT_S10_3 --> S10_4
+    HO_S10_4["HANDOFF -> Ops/Trading | Artifact: Trade instruction"]:::handoff
+    S10_4 --> HO_S10_4
+
+    EXIT(["To Phase 11: Post-Mortem Protocol"]):::endpoint
+    HO_S10_4 --> EXIT
+
+    %% ── LEGEND ──
+    subgraph Legend
+        direction LR
+        LEG_F["Full LLM"]:::llmFull
+        LEG_P["Partial / Paywall"]:::llmPartial
+        LEG_N["Human Only"]:::llmNone
+        LEG_U["Future: Full via free API"]:::futureUpgrade
+    end
