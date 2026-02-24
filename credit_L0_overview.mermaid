@@ -11,36 +11,36 @@ flowchart TD
     classDef handoff fill:#4527A0,stroke:#311B92,color:#fff,rx:4,ry:4
     classDef futureUpgrade fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4,stroke-width:3px,stroke-dasharray:5 5
 
-    ENTRY([Workflow Start]):::endpoint
+    ENTRY(["Workflow Start"]):::endpoint
 
-    P1[/Phase 1: Opportunity Screening & M…\n8 steps ⟨2F/3P/3N⟩\n→ L1 Phase 01/]:::subproc
+    P1["Phase 1: Opportunity Screening & M… | 8 steps (2F/3P/3N)"]:::llmPartial
     ENTRY --> P1
-    P2[/Phase 2: Issuer & Industry Analysis\n4 steps ⟨1F/3P/0N⟩\n→ L1 Phase 02/]:::subproc
+    P2["Phase 2: Issuer & Industry Analysis | 4 steps (1F/3P/0N)"]:::llmPartial
     P1 --> P2
-    P3[/Phase 3: Credit Financial Analysis\n6 steps ⟨0F/6P/0N⟩\n→ L1 Phase 03/]:::subproc
+    P3["Phase 3: Credit Financial Analysis | 6 steps (0F/6P/0N)"]:::llmPartial
     P2 --> P3
-    P4[/Phase 4: Credit Modeling & Scenari…\n6 steps ⟨0F/6P/0N⟩\n→ L1 Phase 04/]:::subproc
+    P4["Phase 4: Credit Modeling & Scenari… | 6 steps (0F/6P/0N)"]:::llmPartial
     P3 --> P4
-    P5[/Phase 5: Relative Value & Total Re…\n4 steps ⟨0F/3P/1N⟩\n→ L1 Phase 05/]:::subproc
+    P5["Phase 5: Relative Value & Total Re… | 4 steps (0F/3P/1N)"]:::llmPartial
     P4 --> P5
-    P6[/Phase 6: Legal & Structural Analys…\n3 steps ⟨0F/3P/0N⟩\n→ L1 Phase 06/]:::subproc
+    P6["Phase 6: Legal & Structural Analys… | 3 steps (0F/3P/0N)"]:::llmPartial
     P5 --> P6
-    P7[/Phase 7: Model & Data Validation\n5 steps ⟨0F/0P/5N⟩\n→ L1 Phase 07/]:::subproc
+    P7["Phase 7: Model & Data Validation | 5 steps (0F/0P/5N)"]:::llmNone
     P6 --> P7
-    P8[/Phase 8: Memo Drafting\n11 steps ⟨9F/1P/1N⟩\n→ L1 Phase 08/]:::subproc
+    P8["Phase 8: Memo Drafting | 11 steps (9F/1P/1N)"]:::llmFull
     P7 --> P8
-    P9[/Phase 9: Quality Assurance & Review\n5 steps ⟨2F/1P/2N⟩\n→ L1 Phase 09/]:::subproc
+    P9["Phase 9: Quality Assurance & Review | 5 steps (2F/1P/2N)"]:::llmPartial
     P8 --> P9
-    P10[/Phase 10: IC Preparation & Execution\n4 steps ⟨1F/0P/3N⟩\n→ L1 Phase 10/]:::subproc
+    P10["Phase 10: IC Preparation & Execution | 4 steps (1F/0P/3N)"]:::llmNone
     P9 --> P10
-    P11[/Phase 11: Post-Mortem Protocol\n3 steps ⟨1F/2P/0N⟩\n→ L1 Phase 11/]:::subproc
+    P11["Phase 11: Post-Mortem Protocol | 3 steps (1F/2P/0N)"]:::llmPartial
     P10 --> P11
 
-    P11 --> DONE([Workflow Complete]):::endpoint
+    P11 --> DONE(["Workflow Complete"]):::endpoint
 
     subgraph Legend
         direction LR
-        LEG_F[Majority Full]:::llmFull
-        LEG_P[Majority Partial]:::llmPartial
-        LEG_N[Majority None]:::llmNone
+        LEG_F["Majority Full"]:::llmFull
+        LEG_P["Majority Partial"]:::llmPartial
+        LEG_N["Majority None"]:::llmNone
     end
