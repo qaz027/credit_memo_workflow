@@ -1,0 +1,51 @@
+---
+title: "Credit L1 — Phase 9: Quality Assurance and Review"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 9, lines 358-380)
+%% Entry: Phase 8 Output (complete credit memo draft)
+%% Exit: Phase 9 Output (final memo, version-stamped) → Phase 10 (IC)
+%% Cold reader rejection loop: sends back → analyst revises → cold reader re-reads
+%% Steps: 6 | LLM Full: 3 (+ revision node) | LLM Partial: 1 | LLM None: 2
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 8 Output: Complete credit memo draft]):::endpoint
+
+    ENTRY --> S9_1
+    ENTRY --> S9_2
+
+    subgraph PH9 ["Phase 9: Quality Assurance and Review"]
+        %% ── PARALLEL SELF-REVIEW ──
+        S9_1[9.1 - Analyst: Check logical consistency across credit memo sections]:::llmFull
+        S9_2[9.2 - Analyst: Review downside rigor - is bear case as thorough as bull?]:::llmFull
+
+        %% Force left-to-right ordering
+        S9_1 ~~~ S9_2
+
+        S9_1 --> S9_3
+        S9_2 --> S9_3
+        S9_3[9.3 - Analyst: Check formatting, grammar, and covenant number consistency]:::llmPartial
+
+        %% ── COLD READER GATE ──
+        S9_3 --> S9_4[9.4 - Cold Reader: Cold read focused on what breaks this covenant]:::llmNone
+        S9_4 --> D_COLD{Cold reader approves?}:::decision
+        D_COLD -->|Sends back| S9_REV[Analyst: Revise per cold reader comments]:::llmFull
+        S9_REV --> S9_4
+        D_COLD -->|Approved| S9_5[9.5 - Analyst to PM: Finalize memo and apply version stamp]:::llmNone
+    end
+
+    style PH9 fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px,color:#E65100
+
+    S9_5 --> PH9_OUT[Phase 9 Output: Final memo, version-stamped and cold-reader approved]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH9_OUT --> EXIT_10([→ Phase 10: IC Preparation and Execution]):::endpoint
+
+    style EXIT_10 fill:#F3E5F5,stroke:#CE93D8,color:#6A1B9A

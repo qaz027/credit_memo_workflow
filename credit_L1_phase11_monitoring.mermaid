@@ -1,0 +1,36 @@
+---
+title: "Credit L1 — Phase 11: Ongoing Position Monitoring"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 11, lines 403-411)
+%% Entry: Position established (from Phase 10 trade execution)
+%%        Recurring at each reporting period — not a one-shot review
+%% Exit: INTACT → next review cycle
+%%       REVISED → update parameters and exit criteria, then next cycle
+%%       BROKEN → trigger sell discipline per Phase 8 exit criteria
+%% Phase 8 exit criteria (sell discipline triggers, spread targets,
+%%   thesis-breaking thresholds) are the monitoring reference points.
+%% Steps: 2 + decision + update node | LLM Full: 1 | LLM Partial: 1 | LLM None: 1
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Position established — recurring at each reporting period]):::endpoint
+
+    ENTRY -.-> S11_1
+
+    subgraph PH11 ["Phase 11: Ongoing Position Monitoring"]
+        S11_1[11.1 - Analyst: Compare actuals against frozen projections and Phase 8 exit criteria]:::llmPartial
+        S11_1 --> S11_2[11.2 - Analyst to PM: Assess thesis status against pre-established sell discipline triggers]:::llmFull
+        S11_2 --> D_THESIS{Thesis status?}:::decision
+        D_THESIS -->|INTACT| MONITOR([Next review cycle]):::endpoint
+        D_THESIS -->|REVISED| UPDATE[Analyst + PM: Update position parameters and exit criteria]:::llmNone
+        UPDATE --> MONITOR
+        D_THESIS -->|BROKEN| SELL([Trigger sell discipline per Phase 8 exit criteria]):::endpoint
+    end
+
+    style PH11 fill:#ECEFF1,stroke:#90A4AE,stroke-width:2px,color:#263238

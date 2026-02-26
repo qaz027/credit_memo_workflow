@@ -1,0 +1,47 @@
+---
+title: "Credit L1 — Phase 1: Opportunity Screening and Mandate Fit"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 1, lines 18-36)
+%% Entry: Dual entry points (Analyst-initiated or PM-initiated)
+%% Exit: Go → Phase 1 Output feeds parallel Phases 2, 3, 4
+%%       No-Go → Log and pass
+%% Steps: 8 | LLM Full: 2 | LLM Partial: 3 | LLM None: 3
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+
+    %% ── DUAL ENTRY ──
+    ENTRY_A([Analyst identifies credit via screen, broker, or new issue]):::endpoint
+    ENTRY_PM([PM assigns issuer coverage or flags spread opportunity]):::endpoint
+
+    ENTRY_A --> S1_1
+    ENTRY_PM --> S1_1
+
+    %% ── SCREENING SEQUENCE ──
+    S1_1[1.1 - Analyst: Confirm mandate fit and capital structure eligibility]:::llmPartial
+    S1_1 --> S1_2[1.2 - Analyst: Log opportunity in credit pipeline tracker]:::llmNone
+    S1_2 --> S1_3[1.3 - Analyst: Rapid credit screen - leverage, coverage, liquidity, red flags]:::llmPartial
+    S1_3 --> S1_4[1.4 - Analyst: Review offering memorandum and credit agreement highlights]:::llmPartial
+    S1_4 --> S1_5[1.5 - Compliance: Execute MNPI wall check and capital structure clearance]:::llmNone
+    S1_5 --> S1_6[1.6 - Analyst: Formulate preliminary credit thesis]:::llmFull
+    S1_6 --> S1_7[1.7 - Analyst: Identify credit risks and key questions]:::llmFull
+    S1_7 --> S1_8[1.8 - Analyst to PM: Present credit screen for resource allocation]:::llmNone
+
+    %% ── GO / NO-GO GATE ──
+    S1_8 --> D1{Go / No-Go?}:::decision
+    D1 -->|No-Go| PASS([Log reason and pass]):::endpoint
+    D1 -->|Go| PH1_OUT[Phase 1 Output: Approved credit screen, preliminary thesis, risk list]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH1_OUT --> EXIT_2([→ Phase 2: Issuer & Industry Analysis]):::endpoint
+    PH1_OUT --> EXIT_3([→ Phase 3: Credit Financial Analysis]):::endpoint
+    PH1_OUT --> EXIT_4([→ Phase 4: Legal & Structural Analysis]):::endpoint
+
+    style EXIT_2 fill:#E8F5E9,stroke:#81C784,color:#1B5E20
+    style EXIT_3 fill:#FFF3E0,stroke:#FFB74D,color:#E65100
+    style EXIT_4 fill:#F3E5F5,stroke:#CE93D8,color:#6A1B9A

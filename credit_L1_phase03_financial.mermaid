@@ -1,0 +1,73 @@
+---
+title: "Credit L1 — Phase 3: Credit Financial Analysis"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 3, lines 77-117)
+%% Entry: Phase 1 Output (approved credit screen)
+%% Exit: Phase 3 Output converges with Phase 2 Output into Phase 5
+%% Kill paths: FCF deal killer, covenant EBITDA mismatch deal killer
+%% Runs in PARALLEL with Phases 2 and 4 after Phase 1
+%% EXIT CRITERIA BREADCRUMB: 3.3 liquidity stress and 3.4 covenant headroom
+%%   feed into Phase 8 exit strategy section as sell discipline triggers
+%% Steps: 6 | LLM Full: 0 | LLM Partial: 6 | LLM None: 0 | Kill paths: 2
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef killPath fill:#B71C1C,stroke:#880E4F,color:#fff,rx:20,ry:20,font-weight:bold
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 1 Output: Approved credit screen]):::endpoint
+
+    ENTRY --> S3_1_1
+    ENTRY --> S3_1_2
+
+    subgraph PH3 ["Phase 3: Credit Financial Analysis"]
+        subgraph S3_1 ["3.1 Financial Foundation"]
+            S3_1_1[3.1.1 - Analyst: Standardize financial statements into credit template]:::llmPartial
+            S3_1_2[3.1.2 - Analyst: Map complete capital structure by seniority]:::llmPartial
+        end
+
+        S3_1_1 --> S3_2_1
+        S3_1_1 --> S3_2_2
+        S3_1_2 --> S3_2_2
+
+        subgraph S3_2 ["3.2 Credit Analytics"]
+            S3_2_1[3.2.1 - Analyst: Build EBITDA-to-cash bridge and assess cash conversion]:::llmPartial
+            S3_2_2[3.2.2 - Analyst: Calculate and trend all credit ratios]:::llmPartial
+        end
+
+        %% ── FCF DEAL KILLER ──
+        S3_2_1 --> D_FCF{FCF conversion consistently below 50 pct?}:::decision
+        D_FCF -->|Yes| S3_DK([DEAL KILLER: Cash generation structurally impaired]):::killPath
+        D_FCF -->|No| S3_2_OUT
+        S3_2_2 --> S3_2_OUT
+        S3_1_2 --> S3_2_OUT
+
+        S3_2_OUT[Phase 3.2 Output: EBITDA bridge, credit ratios, cap structure verified]:::output
+
+        %% ── LIQUIDITY AND COVENANT ANALYSIS ──
+        S3_2_OUT --> S3_3[3.3 - Analyst: Model liquidity runway under stress scenarios]:::llmPartial
+        S3_2_OUT --> S3_4[3.4 - Analyst: Analyze covenant headroom using legal definitions]:::llmPartial
+        %% EXIT CRITERIA BREADCRUMB: 3.3 liquidity stress levels and 3.4 covenant headroom thresholds
+        %% feed directly into Phase 8 exit strategy section as sell discipline triggers
+
+        %% ── COVENANT EBITDA MISMATCH KILL PATH ──
+        S3_4 -.->|GAAP vs covenant EBITDA mismatch| S3_DK2([DEAL KILLER: Headroom calculation dangerously wrong]):::killPath
+    end
+
+    style PH3 fill:#FFF3E0,stroke:#FFB74D,stroke-width:2px,color:#E65100
+    style S3_1 fill:transparent,stroke:#FFCC80,stroke-width:1px,stroke-dasharray:5 5,color:#E65100
+    style S3_2 fill:transparent,stroke:#FFCC80,stroke-width:1px,stroke-dasharray:5 5,color:#E65100
+
+    S3_3 --> PH3_OUT
+    S3_4 --> PH3_OUT
+    PH3_OUT[Phase 3 Output: Standardized financials, liquidity model, covenant analysis]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH3_OUT --> EXIT_5([→ Converges with Phase 2 into Phase 5: Credit Modeling]):::endpoint
+
+    style EXIT_5 fill:#E3F2FD,stroke:#64B5F6,color:#0D47A1

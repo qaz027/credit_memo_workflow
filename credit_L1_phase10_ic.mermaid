@@ -1,0 +1,46 @@
+---
+title: "Credit L1 — Phase 10: IC Preparation and Execution"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 10, lines 384-398)
+%% Entry: Phase 9 Output (final memo, version-stamped and cold-reader approved)
+%% Exit: Approve → Trade executed → Position established
+%%       Reject → Archive
+%%       Revisions → Loop back to Phase 7 entry (PH_PREFR) for full re-pass
+%% Steps: 4 | LLM Full: 1 | LLM Partial: 0 | LLM None: 3
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 9 Output: Final memo, version-stamped]):::endpoint
+
+    ENTRY --> S10_1
+
+    subgraph PH10 ["Phase 10: IC Preparation and Execution"]
+        S10_1[10.1 - Analyst: Distribute pre-read package to IC members]:::llmNone
+        S10_1 --> S10_2[10.2 - Analyst: Prepare Q&A for anticipated credit challenges]:::llmFull
+        S10_2 --> S10_3[10.3 - Analyst + PM: Present credit case to IC]:::llmNone
+        S10_3 --> D_IC{IC decision?}:::decision
+        D_IC -->|Reject| ARCHIVE([Document rationale and archive]):::endpoint
+    end
+
+    style PH10 fill:#F3E5F5,stroke:#CE93D8,stroke-width:2px,color:#6A1B9A
+
+    %% ── IC OUTCOMES ──
+    D_IC -->|Revisions| EXIT_7([→ Loop back to Phase 7: Data Freeze for re-pass]):::endpoint
+    D_IC -->|Approve| S10_4[10.4 - PM to Ops/Trading: Document IC decision and execute trade]:::llmNone
+
+    S10_4 --> TRADE_DONE([Position established]):::endpoint
+
+    %% ── EXIT CONTEXT ──
+    TRADE_DONE --> EXIT_11([→ Phase 11: Ongoing Position Monitoring — recurring]):::endpoint
+    TRADE_DONE --> EXIT_12([→ Phase 12: Post-Mortem — annual review]):::endpoint
+
+    style EXIT_7 fill:#FFFDE7,stroke:#FFF176,color:#F57F17
+    style EXIT_11 fill:#ECEFF1,stroke:#90A4AE,color:#263238
+    style EXIT_12 fill:#F5F5F5,stroke:#BDBDBD,color:#212121

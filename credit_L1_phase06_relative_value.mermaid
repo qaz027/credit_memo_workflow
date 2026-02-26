@@ -1,0 +1,51 @@
+---
+title: "Credit L1 — Phase 6: Relative Value Analysis"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 6, lines 214-233)
+%% Entry: Phase 5 Output (expected return, cash flow projections)
+%% Exit: Phase 6 Output converges with Phase 4 Output into Phase 7
+%% Note: Step 6.4 is Analyst/Partial — no Factor Model Team.
+%%   Single-name OAS decomposition is analyst-tractable bond math + regression.
+%% EXIT CRITERIA BREADCRUMB: 6.1-6.3 spread comps and total return matrix define
+%%   target exit spread levels and holding period return thresholds for Phase 8 exit strategy.
+%% Steps: 4 | LLM Full: 0 | LLM Partial: 4 | LLM None: 0
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 5 Output: Expected return, cash flow projections]):::endpoint
+
+    ENTRY --> S6_1
+    ENTRY --> S6_2
+    ENTRY --> S6_3
+
+    subgraph PH6 ["Phase 6: Relative Value Analysis"]
+        S6_1[6.1 - Analyst: Build comparable credit spread analysis]:::llmPartial
+        S6_2[6.2 - Analyst: Analyze historical spread movements and technical events]:::llmPartial
+        S6_3[6.3 - Analyst: Build total return matrix across holding periods]:::llmPartial
+
+        %% Force left-to-right ordering of parallel nodes
+        S6_1 ~~~ S6_2 ~~~ S6_3
+
+        S6_1 --> S6_CONVERGE[Phase 6.1-6.3 Output: Spread comps, historical context, return matrix]:::output
+        S6_2 --> S6_CONVERGE
+        S6_3 --> S6_CONVERGE
+
+        S6_CONVERGE --> S6_4[6.4 - Analyst: Decompose total yield into spread risk vs. rate curve risk]:::llmPartial
+        %% EXIT CRITERIA BREADCRUMB: 6.1-6.3 spread comps and total return matrix define
+        %% target exit spread levels and holding period return thresholds for Phase 8 exit strategy.
+    end
+
+    style PH6 fill:#E0F2F1,stroke:#80CBC4,stroke-width:2px,color:#00695C
+
+    S6_4 --> PH6_OUT[Phase 6 Output: Comparable spreads, total return matrix, rate factor decomposition]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH6_OUT --> EXIT_7([→ Converges with Phase 4 into Phase 7: Data Freeze Gate]):::endpoint
+
+    style EXIT_7 fill:#FFFDE7,stroke:#FFF176,color:#F57F17

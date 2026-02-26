@@ -1,0 +1,62 @@
+---
+title: "Credit L1 — Phase 4: Legal and Structural Analysis"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 4, lines 122-148)
+%% Entry: Phase 1 Output (approved credit screen)
+%%        Phase 2 Output feeds 4.2 (structural subordination needs issuer context)
+%% Exit: Phase 4 Output feeds Phase 5 (recovery + covenant inputs)
+%%       Phase 4 Output also converges with Phase 6 into Phase 7
+%% Kill path: D_LME — structurally unsafe debt
+%% Runs in PARALLEL with Phases 2 and 3 after Phase 1
+%% Steps: 9 | LLM Full: 1 | LLM Partial: 7 | LLM None: 1 | Kill: 1
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+    classDef killPath fill:#B71C1C,stroke:#880E4F,color:#fff,rx:20,ry:20,font-weight:bold
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 1 Output: Approved credit screen]):::endpoint
+    ENTRY_PH2([← Phase 2 Output: Issuer profile for structural subordination]):::endpoint
+
+    ENTRY --> S4_1_1
+
+    subgraph PH4 ["Phase 4: Legal and Structural Analysis"]
+        subgraph S4_1 ["4.1 Indenture Deep-Dive"]
+            S4_1_1[4.1.1 - Analyst: Read full credit agreement and extract key definitions]:::llmPartial
+            S4_1_1 --> S4_1_2[4.1.2 - Analyst: Quantify all basket capacities - grower, builder, unrestricted sub]:::llmPartial
+            S4_1_1 --> S4_1_3[4.1.3 - Analyst: Map restricted payment, asset sale, and change of control provisions]:::llmPartial
+            S4_1_1 --> S4_1_4[4.1.4 - Analyst: Assess LME vulnerability - double-dip, drop-down, uptier exchange]:::llmPartial
+            S4_1_2 --> S4_1_REVIEW
+            S4_1_3 --> S4_1_REVIEW
+            S4_1_4 --> S4_1_REVIEW
+            S4_1_REVIEW[4.1.5 - Analyst: Compile covenant summary and flag ambiguous provisions]:::llmPartial
+            S4_1_REVIEW --> S4_1_COUNSEL[4.1.6 - Legal Counsel: Provide opinions on flagged provisions]:::llmNone
+            S4_1_COUNSEL --> S4_1_INTEGRATE[4.1.7 - Analyst: Integrate counsel feedback into covenant summary]:::llmFull
+        end
+
+        %% ── LME KILL PATH ──
+        S4_1_INTEGRATE --> D_LME{Material structural deficiencies identified?}:::decision
+        D_LME -->|Yes| KILL_LME([DEAL KILLER: Structurally unsafe debt]):::killPath
+        D_LME -->|No| S4_2[4.2 - Analyst: Assess structural subordination and guarantor coverage]:::llmPartial
+        D_LME -->|No| S4_3[4.3 - Analyst: Analyze collateral package and security interests]:::llmPartial
+    end
+
+    style PH4 fill:#F3E5F5,stroke:#CE93D8,stroke-width:2px,color:#6A1B9A
+    style S4_1 fill:transparent,stroke:#CE93D8,stroke-width:1px,stroke-dasharray:5 5,color:#6A1B9A
+
+    ENTRY_PH2 --> S4_2
+
+    S4_2 --> PH4_OUT[Phase 4 Output: Covenant quality, structural protections, LME risk]:::output
+    S4_3 --> PH4_OUT
+
+    %% ── EXIT CONTEXT ──
+    PH4_OUT --> EXIT_5([→ Phase 5: Recovery and covenant inputs]):::endpoint
+    PH4_OUT --> EXIT_7([→ Converges with Phase 6 into Phase 7: Data Freeze]):::endpoint
+
+    style EXIT_5 fill:#E3F2FD,stroke:#64B5F6,color:#0D47A1
+    style EXIT_7 fill:#FFFDE7,stroke:#FFF176,color:#F57F17

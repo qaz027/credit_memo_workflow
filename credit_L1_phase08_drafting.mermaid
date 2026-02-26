@@ -1,0 +1,93 @@
+---
+title: "Credit L1 — Phase 8: Memo Drafting"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 8, lines 289-353)
+%% Entry: Phase 7 Output (frozen data package, version-stamped model)
+%% Exit: Phase 8 Output (complete credit memo draft) → Phase 9 (QA)
+%% NOTE: Step IDs follow diagram order (C6 convention), not XLSX memo-document order.
+%%   Mapping: 8.1-8.2=XLSX 8.4-8.5, 8.3=8.7, 8.4-8.5=8.2-8.3, 8.6-8.7=8.6/8.8,
+%%            8.8=8.9, 8.9=8.10, 8.10=NEW(exit strategy), 8.11=8.1, 8.12=8.11
+%% Un-freeze variant: spread moves >50bps or material issuer event triggers re-freeze cycle
+%% Steps: 12 | LLM Full: 10 | LLM Partial: 1 | LLM None: 1 (plus un-freeze variant)
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 7 Output: Frozen data package]):::endpoint
+
+    ENTRY --> S8_1
+    ENTRY --> S8_3
+    ENTRY --> S8_4
+    ENTRY --> S8_6
+    ENTRY --> S8_8
+
+    subgraph PH8 ["Phase 8: Memo Drafting"]
+
+        %% ── PARALLEL DRAFTING BRANCHES ──
+        %% Branch A: Credit Analysis → Risk Factors (sequential)
+        subgraph S8_A ["8.A Credit Analysis Core"]
+            S8_1[8.1 - Analyst: Draft credit analysis core section]:::llmFull
+            S8_1 --> S8_2[8.2 - Analyst: Draft risk factors with sell and trim thresholds]:::llmFull
+        end
+
+        %% Branch B: Recovery Analysis (standalone)
+        S8_3[8.3 - Analyst: Draft recovery analysis section with waterfall]:::llmFull
+
+        %% Branch C: Issuer & Industry (sequential)
+        subgraph S8_C ["8.C Issuer Context"]
+            S8_4[8.4 - Analyst: Draft issuer overview narrative]:::llmFull
+            S8_4 --> S8_5[8.5 - Analyst: Draft industry and credit cycle context section]:::llmFull
+        end
+
+        %% Branch D: Projections & Relative Value (sequential)
+        subgraph S8_D ["8.D Projections & Value"]
+            S8_6[8.6 - Analyst: Draft projections and scenarios narrative]:::llmFull
+            S8_6 --> S8_7[8.7 - Analyst: Draft relative value and total return narrative]:::llmFull
+        end
+
+        %% Branch E: Legal (standalone)
+        S8_8[8.8 - Analyst: Draft legal and structural analysis section]:::llmFull
+
+        %% Force left-to-right ordering of branches
+        S8_A ~~~ S8_3 ~~~ S8_C ~~~ S8_D ~~~ S8_8
+
+        %% ── CONVERGE ALL SECTIONS ──
+        S8_2 --> S8_SECTIONS[All memo sections drafted]:::output
+        S8_3 --> S8_SECTIONS
+        S8_5 --> S8_SECTIONS
+        S8_7 --> S8_SECTIONS
+        S8_8 --> S8_SECTIONS
+
+        %% ── APPENDICES ──
+        S8_SECTIONS --> S8_9[8.9 - Analyst: Compile appendices and credit data visualizations]:::llmPartial
+
+        %% ── EXIT STRATEGY (formalizes triggers from Phases 3, 5, 6) ──
+        S8_9 --> S8_10[8.10 - Analyst: Draft exit strategy - sell discipline triggers, target spread levels, thesis-breaking thresholds]:::llmFull
+
+        %% ── EXECUTIVE SUMMARY (WRITTEN LAST) ──
+        S8_10 --> S8_11[8.11 - Analyst: Draft executive summary - written last]:::llmFull
+
+        %% ── DATA RE-VERIFICATION ──
+        S8_11 --> S8_12[8.12 - Analyst + Senior Analyst: Re-verify all data against frozen credit data set]:::llmNone
+
+        %% ── VARIANT: UN-FREEZE DURING DRAFTING ──
+        S8_12 -.->|Spread moves >50bps or material issuer event| S8_UF[Analyst: Un-freeze, update model, reconcile and re-freeze]:::llmNone
+        S8_UF -.-> S8_12
+    end
+
+    style PH8 fill:#E8F5E9,stroke:#81C784,stroke-width:2px,color:#1B5E20
+    style S8_A fill:transparent,stroke:#A5D6A7,stroke-width:1px,stroke-dasharray:5 5,color:#2E7D32
+    style S8_C fill:transparent,stroke:#A5D6A7,stroke-width:1px,stroke-dasharray:5 5,color:#2E7D32
+    style S8_D fill:transparent,stroke:#A5D6A7,stroke-width:1px,stroke-dasharray:5 5,color:#2E7D32
+
+    S8_12 --> PH8_OUT[Phase 8 Output: Complete credit memo draft with all sections]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH8_OUT --> EXIT_9([→ Phase 9: Quality Assurance and Review]):::endpoint
+
+    style EXIT_9 fill:#FFF3E0,stroke:#FFB74D,color:#E65100

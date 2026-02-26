@@ -1,0 +1,72 @@
+---
+title: "Credit L1 — Phase 7: Data Freeze Gate"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 7, lines 248-281)
+%% Entry: Phases 4+5+6 converged output (all analysis complete)
+%% Exit: Frozen data package → Phase 8 (Memo Drafting)
+%% All steps LLM: None — human verification against live systems and source documents
+%% Decision gates: D_COV (covenant formula match), D_FREEZE (6-item gate)
+%% IC Revisions from Phase 10 also loop back to this phase's entry point (PH_PREFR)
+%% Steps: 8 | LLM Full: 0 | LLM Partial: 0 | LLM None: 8
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef gate fill:#F9A825,stroke:#F57F17,color:#1a202c,font-weight:bold,rx:4,ry:4
+    classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phases 4+5+6 Output: All analysis complete]):::endpoint
+    ENTRY_IC([← Phase 10: IC Revisions loop back here]):::endpoint
+
+    ENTRY --> S7_1
+    ENTRY --> S7_2
+    ENTRY --> S7_3
+    ENTRY_IC --> S7_1
+    ENTRY_IC --> S7_2
+    ENTRY_IC --> S7_3
+
+    subgraph PH7 ["Phase 7: Data Freeze Gate"]
+        subgraph S7_AUDIT ["7.A Model & Data Audit"]
+            S7_1[7.1 - Senior Analyst: Audit credit model for formula errors and breaks]:::llmNone
+            S7_2[7.2 - Analyst: Verify all financial data against issuer filings]:::llmNone
+            S7_3[7.3 - Analyst: Validate all spread and pricing data against live sources]:::llmNone
+
+            %% Force left-to-right ordering
+            S7_1 ~~~ S7_2 ~~~ S7_3
+        end
+
+        S7_1 -->|Handoff: Audit log| S7_1_FIX[Analyst: Confirm fixes from audit findings]:::llmNone
+        S7_1_FIX --> S7_AUDIT_OUT
+        S7_2 --> S7_AUDIT_OUT
+        S7_3 --> S7_AUDIT_OUT
+
+        S7_AUDIT_OUT[Phase 7.A Output: Model audited, financials verified, pricing validated]:::output
+
+        %% ── COVENANT VERIFICATION ──
+        S7_AUDIT_OUT --> S7_4[7.4 - Legal Counsel + Analyst: Verify model covenant formulas implement actual legal definitions]:::llmNone
+        S7_4 --> D_COV{Model formulas match legal definitions?}:::decision
+        D_COV -->|Mismatch| S7_4_FIX[Analyst: Revise model definitions and re-run scenarios]:::llmNone
+        S7_4_FIX --> S7_4
+        D_COV -->|Match| S7_5
+
+        %% ── FREEZE GATE ──
+        S7_5[7.5 - Analyst to PM: Freeze data set and activate un-freeze protocol]:::llmNone
+        S7_5 --> D_FREEZE{Data Freeze Gate: All 6 items passed?}:::gate
+        D_FREEZE -->|No| S7_GAP[Analyst: Resolve identified gaps]:::llmNone
+        S7_GAP --> D_FREEZE
+        D_FREEZE -->|Yes| PH7_FROZEN[vFINAL_PreDraft: Data package frozen and version-stamped]:::output
+    end
+
+    style PH7 fill:#FFFDE7,stroke:#FFF176,stroke-width:2px,color:#F57F17
+    style S7_AUDIT fill:transparent,stroke:#FFF176,stroke-width:1px,stroke-dasharray:5 5,color:#F57F17
+
+    PH7_FROZEN --> PH7_OUT[Phase 7 Output: Frozen data package, version-stamped model]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH7_OUT --> EXIT_8([→ Phase 8: Memo Drafting]):::endpoint
+
+    style EXIT_8 fill:#E8F5E9,stroke:#81C784,color:#1B5E20

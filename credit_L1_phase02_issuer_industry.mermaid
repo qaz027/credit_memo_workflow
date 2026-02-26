@@ -1,0 +1,53 @@
+---
+title: "Credit L1 — Phase 2: Issuer and Industry Analysis"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 2, lines 50-68)
+%% Entry: Phase 1 Output (approved credit screen, preliminary thesis, risk list)
+%% Exit: Phase 2 Output converges with Phase 3 Output into Phase 5
+%%       Phase 2 Output also feeds Phase 4 (structural subordination assessment)
+%% Runs in PARALLEL with Phases 3 and 4 after Phase 1
+%% Steps: 5 | LLM Full: 2 | LLM Partial: 3 | LLM None: 0
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Phase 1 Output: Approved credit screen]):::endpoint
+
+    ENTRY --> S2_1
+
+    subgraph PH2 ["Phase 2: Issuer and Industry Analysis"]
+        S2_1[2.1 - Analyst: Analyze industry positioning and credit cycle context]:::llmFull
+
+        S2_1 --> S2_2_1
+        S2_1 --> S2_2_2
+        S2_1 --> S2_2_3
+
+        subgraph S2_2 ["2.2 Issuer Due Diligence"]
+            S2_2_1[2.2.1 - Analyst: Assess revenue quality and customer concentration]:::llmPartial
+            S2_2_2[2.2.2 - Analyst: Assess business model defensibility and competitive position]:::llmFull
+            S2_2_3[2.2.3 - Analyst: Research ownership structure and management behavior]:::llmPartial
+        end
+
+        S2_2_1 --> S2_2_OUT[Phase 2.2 Output: Issuer due diligence package]:::output
+        S2_2_2 --> S2_2_OUT
+        S2_2_3 --> S2_2_OUT
+
+        S2_2_OUT --> S2_3[2.3 - Analyst: Model downturn scenarios for the specific sector]:::llmPartial
+    end
+
+    style PH2 fill:#E8F5E9,stroke:#81C784,stroke-width:2px,color:#1B5E20
+    style S2_2 fill:transparent,stroke:#A5D6A7,stroke-width:1px,stroke-dasharray:5 5,color:#2E7D32
+
+    S2_3 --> PH2_OUT[Phase 2 Output: Industry context, issuer profile, downturn scenarios]:::output
+
+    %% ── EXIT CONTEXT ──
+    PH2_OUT --> EXIT_5([→ Converges with Phase 3 into Phase 5: Credit Modeling]):::endpoint
+    PH2_OUT --> EXIT_4([→ Phase 4: Structural subordination input]):::endpoint
+
+    style EXIT_5 fill:#E3F2FD,stroke:#64B5F6,color:#0D47A1
+    style EXIT_4 fill:#F3E5F5,stroke:#CE93D8,color:#6A1B9A

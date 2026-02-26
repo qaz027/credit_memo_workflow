@@ -1,0 +1,32 @@
+---
+title: "Credit L1 — Phase 12: Post-Mortem — Annual Process Review"
+---
+%% Source: Credit_Comprehensive.mermaid (Phase 12, lines 421-430)
+%% Entry: Position established (from Phase 10 trade execution)
+%%        Annual fixed-interval review — not triggered by position events
+%%        Portfolio-wide, not position-specific
+%% Exit: Terminal — outputs are institutional improvements, not deal flow
+%%        No arrow back to Phase 1. Process improvements feed future workflow cycles.
+%% This phase reviews the analytical FRAMEWORK itself, not individual positions.
+%% Steps: 3 | LLM Full: 1 | LLM Partial: 1 | LLM None: 1
+
+flowchart TD
+    classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
+    classDef llmPartial fill:#E65100,stroke:#BF360C,color:#fff,rx:4,ry:4
+    classDef llmNone fill:#C62828,stroke:#B71C1C,color:#fff,rx:4,ry:4
+    classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
+
+    %% ── ENTRY CONTEXT ──
+    ENTRY([← Annual portfolio-wide review cycle]):::endpoint
+
+    ENTRY -.-> S12_1
+
+    subgraph PH12 ["Phase 12: Post-Mortem — Annual Process Review"]
+        S12_1[12.1 - Analyst: Review analytical accuracy across phases - screening, financials, covenants, scenarios, relative value]:::llmPartial
+        S12_1 --> S12_2[12.2 - Analyst: Identify systematic gaps in frameworks, models, and stress assumptions]:::llmFull
+        S12_2 --> S12_3[12.3 - Analyst + PM: Update templates, screening criteria, stress parameters, and analytical tools]:::llmNone
+    end
+
+    style PH12 fill:#F5F5F5,stroke:#BDBDBD,stroke-width:2px,color:#212121
+
+    S12_3 --> PM_IMPROVE([Process and framework improvements institutionalized]):::endpoint
