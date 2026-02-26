@@ -1,5 +1,5 @@
 ---
-title: "Credit — L0 Overview"
+title: "Credit Investment Memo - L0 Overview (v4)"
 ---
 flowchart TD
     classDef llmFull fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4
@@ -8,54 +8,108 @@ flowchart TD
     classDef gate fill:#F9A825,stroke:#F57F17,color:#1a202c,font-weight:bold,rx:4,ry:4
     classDef decision fill:#1565C0,stroke:#0D47A1,color:#fff,rx:12,ry:12
     classDef endpoint fill:#6A1B9A,stroke:#4A148C,color:#fff,rx:20,ry:20
-    classDef handoff fill:#4527A0,stroke:#311B92,color:#fff,rx:4,ry:4
-    classDef futureUpgrade fill:#2E7D32,stroke:#1B5E20,color:#fff,rx:4,ry:4,stroke-width:3px,stroke-dasharray:5 5
+    classDef killPath fill:#B71C1C,stroke:#880E4F,color:#fff,rx:20,ry:20,font-weight:bold
+    classDef output fill:#0D47A1,stroke:#0A3A7E,color:#fff,rx:4,ry:4
 
-    ENTRY(["Workflow Start"]):::endpoint
+    %% PHASE 1
+    ENTRY_A([Analyst identifies credit via screen, broker, or new issue]):::endpoint
+    ENTRY_PM([PM assigns issuer coverage or flags spread opportunity]):::endpoint
 
-    P1["Phase 1: Screening & Mandate Fit | 8 steps (2F/3P/3N)"]:::llmPartial
-    ENTRY --> P1
+    ENTRY_A --> PH1
+    ENTRY_PM --> PH1
 
-    %% Phases 2-6 run in parallel after screening
-    P2["Phase 2: Issuer & Industry Analysis | 4 steps (1F/3P/0N)"]:::llmPartial
-    P3["Phase 3: Credit Financial Analysis | 6 steps (0F/6P/0N)"]:::llmPartial
-    P4["Phase 4: Credit Modeling & Scenarios | 6 steps (0F/6P/0N)"]:::llmPartial
-    P5["Phase 5: Relative Value & Total Return | 4 steps (0F/3P/1N)"]:::llmPartial
-    P6["Phase 6: Legal & Structural Analysis | 3 steps (0F/3P/0N)"]:::llmPartial
+    PH1[Phase 1: Opportunity Screening and Mandate Fit]:::llmPartial
+    PH1 --> D1{Go / No-Go?}:::decision
+    D1 -->|No-Go| PASS([Log reason and pass]):::endpoint
+    D1 -->|Go| PH1_OUT[Phase 1 Output: Approved credit screen, preliminary thesis, risk list]:::output
 
-    P1 --> P2
-    P1 --> P3
-    P1 --> P4
-    P1 --> P5
-    P1 --> P6
+    %% PARALLEL SPLIT
+    PH1_OUT --> PH2
+    PH1_OUT --> PH3
+    PH1_OUT --> PH4
 
-    %% All parallel streams converge into validation
-    P7["Phase 7: Model & Data Validation | 5 steps (0F/0P/5N)"]:::llmNone
+    %% PHASE 2
+    PH2[Phase 2: Issuer and Industry Analysis]:::llmFull
+    PH2 --> PH2_OUT[Phase 2 Output: Industry context, issuer profile, downturn scenarios]:::output
 
-    P2 --> P7
-    P3 --> P7
-    P4 --> P7
-    P5 --> P7
-    P6 --> P7
+    %% PHASE 3 with kill paths
+    PH3[Phase 3: Credit Financial Analysis]:::llmPartial
+    PH3 --> D_FCF{FCF conversion consistently below 50 pct?}:::decision
+    D_FCF -->|Yes| KILL_FCF([DEAL KILLER: Cash generation structurally impaired]):::killPath
+    D_FCF -->|No| PH3_OK[Phase 3 continues: Liquidity and covenant analysis]:::llmPartial
+    PH3_OK -.->|GAAP vs covenant EBITDA mismatch| KILL_COV([DEAL KILLER: Headroom calculation dangerously wrong]):::killPath
+    PH3_OK --> PH3_OUT[Phase 3 Output: Standardized financials, liquidity model, covenant analysis]:::output
 
-    %% Sequential from here
-    P8["Phase 8: Memo Drafting | 11 steps (9F/1P/1N)"]:::llmFull
-    P7 --> P8
+    %% PHASE 4 with kill path
+    PH4[Phase 4: Legal and Structural Analysis]:::llmPartial
+    PH4 --> D_LME{Material structural deficiencies identified?}:::decision
+    D_LME -->|Yes| KILL_LME([DEAL KILLER: Structurally unsafe debt]):::killPath
+    D_LME -->|No| PH4_OUT[Phase 4 Output: Covenant quality, structural protections, LME risk]:::output
 
-    P9["Phase 9: Quality Assurance & Review | 5 steps (2F/1P/2N)"]:::llmPartial
-    P8 --> P9
+    %% Phase 2 feeds Phase 4 structural subordination
+    PH2_OUT --> PH4_OUT
 
-    P10["Phase 10: IC Preparation & Execution | 4 steps (1F/0P/3N)"]:::llmNone
-    P9 --> P10
+    %% CONVERGENCE INTO PHASE 5
+    PH2_OUT --> PH23_CONVERGE[Phases 2 and 3 converge]:::output
+    PH3_OUT --> PH23_CONVERGE
+    PH23_CONVERGE --> PH5
+    PH4_OUT -->|Recovery and covenant inputs| PH5
 
-    P11["Phase 11: Post-Mortem Protocol | 3 steps (1F/2P/0N)"]:::llmPartial
-    P10 --> P11
+    %% PHASE 5
+    PH5[Phase 5: Credit Modeling and Scenario Analysis]:::llmPartial
+    PH5 --> PH5_OUT[Phase 5 Output: Cash flow projections, debt waterfall, recovery, expected return]:::output
 
-    P11 --> DONE(["Workflow Complete"]):::endpoint
+    %% PHASE 6
+    PH5_OUT --> PH6
+    PH6[Phase 6: Relative Value Analysis]:::llmPartial
+    PH6 --> PH6_OUT[Phase 6 Output: Comparable spreads, total return matrix, rate factor decomposition]:::output
 
-    subgraph Legend
-        direction LR
-        LEG_F["Majority Full"]:::llmFull
-        LEG_P["Majority Partial"]:::llmPartial
-        LEG_N["Majority None"]:::llmNone
-    end
+    %% CONVERGENCE INTO PHASE 7
+    PH4_OUT --> PH_PREFR[All analysis complete, ready for data freeze]:::output
+    PH6_OUT --> PH_PREFR
+
+    %% PHASE 7
+    PH_PREFR --> PH7
+    PH7[Phase 7: Data Freeze Gate]:::llmNone
+    PH7 --> D_FREEZE{Data Freeze Gate: All items passed?}:::gate
+    D_FREEZE -->|No| PH7_FIX[Resolve gaps and re-verify]:::llmNone
+    PH7_FIX --> D_FREEZE
+    D_FREEZE -->|Yes| PH7_OUT[Phase 7 Output: Frozen data package, version-stamped model]:::output
+
+    %% PHASE 8
+    PH7_OUT --> PH8
+    PH8[Phase 8: Memo Drafting]:::llmFull
+    PH8 -.->|Spread moves over 50bps or material issuer event| PH8_UF[Un-freeze, update model, re-freeze]:::llmNone
+    PH8_UF -.-> PH8
+    PH8 --> PH8_OUT[Phase 8 Output: Complete credit memo draft with all sections]:::output
+
+    %% PHASE 9
+    PH8_OUT --> PH9
+    PH9[Phase 9: Quality Assurance and Review]:::llmFull
+    PH9 --> D_COLD{Cold reader approves?}:::decision
+    D_COLD -->|Sends back| PH9_REV[Analyst: Revise per cold reader comments]:::llmFull
+    PH9_REV --> PH9
+    D_COLD -->|Approved| PH9_OUT[Phase 9 Output: Final memo, version-stamped and cold-reader approved]:::output
+
+    %% PHASE 10
+    PH9_OUT --> PH10
+    PH10[Phase 10: IC Preparation and Execution]:::llmNone
+    PH10 --> D_IC{IC decision?}:::decision
+    D_IC -->|Reject| ARCHIVE([Document rationale and archive]):::endpoint
+    D_IC -->|Revisions| PH_PREFR
+    D_IC -->|Approve| S10_4[PM to Ops and Trading: Document IC decision and execute trade]:::llmNone
+    S10_4 --> TRADE_DONE([Position established]):::endpoint
+
+    %% PHASE 11
+    TRADE_DONE -.->|Recurring at each reporting period| PH11
+    PH11[Phase 11: Ongoing Position Monitoring]:::llmPartial
+    PH11 --> D_THESIS{Thesis status?}:::decision
+    D_THESIS -->|INTACT| MONITOR([Next review cycle]):::endpoint
+    D_THESIS -->|REVISED| UPDATE[Analyst + PM: Update position parameters and exit criteria]:::llmNone
+    UPDATE --> MONITOR
+    D_THESIS -->|BROKEN| SELL([Trigger sell discipline per Phase 8 exit criteria]):::endpoint
+
+    %% PHASE 12
+    TRADE_DONE -.->|Annual portfolio-wide review| PH12
+    PH12[Phase 12: Post-Mortem - Annual Process Review]:::llmPartial
+    PH12 --> PM_IMPROVE([Process and framework improvements institutionalized]):::endpoint
